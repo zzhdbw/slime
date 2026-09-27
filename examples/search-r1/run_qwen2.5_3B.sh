@@ -96,6 +96,13 @@ WANDB_ARGS=(
    # --wandb-key ${WANDB_KEY}
 )
 
+SWANLAB_ARGS=(
+   --use-swanlab
+   --swanlab-project slime-dev
+   --swanlab-experiment-name search-r1_qwen2.5-3B-test
+   --swanlab-mode cloud
+)
+
 SGLANG_ARGS=(
    --rollout-num-gpus-per-engine 2
    --sglang-mem-fraction-static 0.7
@@ -145,6 +152,7 @@ ray job submit --address="http://127.0.0.1:8265" \
    ${OPTIMIZER_ARGS[@]} \
    ${GRPO_ARGS[@]} \
    ${WANDB_ARGS[@]} \
+   ${SWANLAB_ARGS[@]} \
    ${PERF_ARGS[@]} \
    ${SGLANG_ARGS[@]} \
    ${MISC_ARGS[@]} \

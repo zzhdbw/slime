@@ -1202,6 +1202,35 @@ def get_slime_extra_args_provider(add_custom_arguments=None):
             )
             return parser
 
+        # swanlab
+        def add_swanlab_arguments(parser):
+            parser.add_argument(
+                "--use-swanlab",
+                action="store_true",
+                default=False,
+                help="Enable SwanLab for experiment tracking (requires: pip install swanlab). Logs metrics via swanlab.init/log only.",
+            )
+            parser.add_argument(
+                "--swanlab-project",
+                type=str,
+                default=None,
+                help="SwanLab project name. Defaults to wandb-project if set, else 'slime'.",
+            )
+            parser.add_argument(
+                "--swanlab-experiment-name",
+                type=str,
+                default=None,
+                help="SwanLab experiment name. Defaults to wandb-group if set, else auto-generated run id.",
+            )
+            parser.add_argument(
+                "--swanlab-mode",
+                type=str,
+                default=None,
+                choices=["cloud", "local", "offline", "disabled"],
+                help="SwanLab run mode (cloud / local / offline / disabled).",
+            )
+            return parser
+
         # wandb
         def add_wandb_arguments(parser):
             # wandb parameters
@@ -1597,6 +1626,7 @@ def get_slime_extra_args_provider(add_custom_arguments=None):
         parser = add_algo_arguments(parser)
         parser = add_on_policy_distillation_arguments(parser)
         parser = add_wandb_arguments(parser)
+        parser = add_swanlab_arguments(parser)
         parser = add_tensorboard_arguments(parser)
         parser = add_debug_arguments(parser)
         parser = add_network_arguments(parser)
