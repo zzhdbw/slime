@@ -194,3 +194,8 @@ glm/
 _examples_synced/
 .env
 .DS_Store
+
+# Search-R1 experiment artifacts
+/Index/
+/Search-R1/
+/swanlog/

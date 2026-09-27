@@ -163,6 +163,10 @@ cd slime/
 bash examples/search-r1/run_qwen2.5_3B.sh
 ```
 
+## 端到端配方
+
+完整的本地检索流程（Docker 启动、模型转换、数据/索引准备、检索服务、训练）见 [recipe/README.md](./recipe/README.md)。
+
 ## 代码结构
 
 为了实现多轮 + 工具调用，在 slime 中只需要实现一个自定义的数据生成函数，以及一个任务所需的 reward model，对应启动脚本中的这 2 个配置项：

@@ -18,6 +18,12 @@ export PYTHONUNBUFFERED=1
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "${SCRIPT_DIR}/../../scripts/models/qwen2.5-3B.sh"
 
+# Recipe-friendly overrides. The defaults below match the upstream example.
+# NUM_GPUS can be set by the recipe wrapper to override both GPU counts.
+PROMPT_DATA="${PROMPT_DATA:-/root/Search-R1/data/nq_hotpotqa_train/train.parquet}"
+RAY_NUM_GPUS="${RAY_NUM_GPUS:-${NUM_GPUS:-8}}"
+TRAIN_GPUS_PER_NODE="${TRAIN_GPUS_PER_NODE:-${NUM_GPUS:-4}}"
+
 CKPT_ARGS=(
    --hf-checkpoint /root/Qwen2.5-3B/
    --ref-load /root/Qwen2.5-3B_torch_dist/
@@ -27,7 +33,7 @@ CKPT_ARGS=(
 )
 
 ROLLOUT_ARGS=(
-   --prompt-data /root/Search-R1/data/nq_hotpotqa_train/train.parquet
+   --prompt-data "${PROMPT_DATA}"
    --input-key prompt
    --label-key reward_model
    --apply-chat-template
@@ -130,7 +136,7 @@ CUSTOM_ARGS=(
 
 # launch the master node of ray in container
 export MASTER_ADDR=${MASTER_ADDR:-"127.0.0.1"}
-ray start --head --node-ip-address ${MASTER_ADDR} --num-gpus 8 --disable-usage-stats
+ray start --head --node-ip-address ${MASTER_ADDR} --num-gpus "${RAY_NUM_GPUS}" --disable-usage-stats
 
 RUNTIME_ENV_JSON="{
   \"env_vars\": {
@@ -143,8 +149,8 @@ ray job submit --address="http://127.0.0.1:8265" \
    --runtime-env-json="${RUNTIME_ENV_JSON}" \
    -- python3 train.py \
    --actor-num-nodes 1 \
-   --actor-num-gpus-per-node 4 \
-   --rollout-num-gpus 4 \
+   --actor-num-gpus-per-node "${TRAIN_GPUS_PER_NODE}" \
+   --rollout-num-gpus "${TRAIN_GPUS_PER_NODE}" \
    --colocate \
    ${MODEL_ARGS[@]} \
    ${CKPT_ARGS[@]} \

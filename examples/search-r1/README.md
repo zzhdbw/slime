@@ -163,6 +163,10 @@ cd slime/
 bash examples/search-r1/run_qwen2.5_3B.sh
 ```
 
+## End-to-End Recipe
+
+For a complete local-retriever workflow (Docker startup, model conversion, data/index preparation, retrieval server, and training), see [recipe/README.md](./recipe/README.md).
+
 ## Code Structure
 
 To implement multi-turn conversation + tool-calling in slime, you only need to implement a custom data generation function and a reward model for the task. These correspond to the following 2 configuration items in the startup script:
